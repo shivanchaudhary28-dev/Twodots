@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login • Two Dots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root{--p:#00d4c4;--gray:#f0f0f0}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(135deg,#00d4c4,#00b3a6);
+      min-height:100vh;
+      display:flex;align-items:center;justify-content:center;
+      padding:20px;
+    }
+    .card{
+      background:white;
+      width:100%;max-width:420px;
+      border-radius:28px;
+      overflow:hidden;
+      box-shadow:0 20px 60px rgba(0,0,0,0.25);
+    }
+    .header{
+      background:linear-gradient(135deg,var(--p),#00b3a6);
+      color:white;text-align:center;
+      padding:40px 30px;
+    }
+    .header h1{
+      font-size:28px;font-weight:700;margin-bottom:8px;
+    }
+    .header p{font-size:15px;opacity:0.9}
+
+    .form{padding:32px 28px}
+    .input-group{
+      position:relative;margin-bottom:22px;
+    }
+    .input-group i{
+      position:absolute;left:18px;top:50%;transform:translateY(-50%);
+      color:#888;font-size:19px;
+    }
+    .input-group input{
+      width:100%;padding:17px 17px 17px 56px;
+      border:1.8px solid #e0e0e0;border-radius:16px;
+      font-size:15.5px;background:#fff;
+      transition:all 0.3s;
+    }
+    .input-group input:focus{
+      outline:none;border-color:var(--p);
+      box-shadow:0 0 0 4px rgba(0,212,196,0.2);
+    }
+
+    .btn{
+      width:100%;padding:18px;
+      background:var(--p);color:white;
+      border:none;border-radius:50px;
+      font-size:17px;font-weight:700;
+      cursor:pointer;margin-top:10px;
+      box-shadow:0 8px 25px rgba(0,212,196,0.4);
+      transition:0.3s;
+    }
+    .btn:active{transform:translateY(2px)}
+
+    .switch{
+      text-align:center;margin-top:24px;
+      font-size:15px;color:#666;
+    }
+    .switch a{color:var(--p);font-weight:600;text-decoration:none}
+
+    @media (max-width:480px){
+      .card{border-radius:22px}
+      .header{padding:35px 25px}
+      .form{padding:28px 22px}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="header">
+      <h1>Welcome Back</h1>
+      <p>Login to your Two Dots account</p>
+    </div>
+
+    <div class="form">
+      <div class="input-group">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="email" placeholder="Email Address" required>
+      </div>
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="pass" placeholder="Password" required>
+      </div>
+
+      <button class="btn" onclick="login()">Login Now</button>
+
+      <div class="switch">
+        New here? <a href="signup.html">Create Account</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Auto redirect if already logged in
+    if (localStorage.getItem("twoDotsUser")) {
+      location.href = "account.html";
+    }
+
+    function login() {
+      const email = document.getElementById("email").value.trim();
+      const pass = document.getElementById("pass").value;
+
+      if (!email || !pass) {
+        return alert("Please fill all fields");
+      }
+
+      const users = JSON.parse(localStorage.getItem("twoDotsUsers") || "[]");
+      const user = users.find(u => u.email === email && u.password === pass);
+
+      if (!user) {
+        return alert("Wrong email or password");
+      }
+
+      // SUCCESSFUL LOGIN
+      localStorage.setItem("twoDotsUser", JSON.stringify(user));
+
+      // UPDATE BOTTOM NAV PROFILE ICON INSTANTLY (on all open tabs too!)
+      if (typeof updateProfileIcon === "function") {
+        updateProfileIcon();
+      }
+
+      alert("Welcome back, " + (user.name?.split(" ")[0] || "User") + "!");
+      location.href = "account.html";
+    }
+
+    // Optional: Press Enter to login
+    document.addEventListener("keypress", function(e) {
+      if (e.key === "Enter") login();
+    });
+  </script>
+</body>
+</html>

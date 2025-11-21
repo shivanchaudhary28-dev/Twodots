@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback & Reviews • Two Dots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root{--p:#00d4c4}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Poppins',sans-serif;background:#f9f9f9;color:#333;min-height:100vh}
+
+    .header{
+      position:sticky;top:0;background:#fff;z-index:100;
+      padding:14px 16px;display:flex;align-items:center;
+      box-shadow:0 2px 12px rgba(0,0,0,0.08);
+    }
+    .back-arrow{
+      width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+      background:#f0fdfc;border-radius:50%;color:var(--p);
+      font-size:21px;cursor:pointer;
+    }
+    .title{font-size:20px;font-weight:700;color:var(--p);margin-left:12px}
+
+    .container{max-width:600px;margin:0 auto;padding:20px 16px}
+
+    .form-card{
+      background:white;border-radius:20px;padding:28px;
+      box-shadow:0 10px 35px rgba(0,0,0,0.08);
+    }
+    .user-info{
+      display:flex;align-items:center;gap:14px;margin-bottom:20px;
+    }
+    .user-info img{width:50px;height:50px;border-radius:50%;border:3px solid var(--p)}
+    .user-name{font-size:18px;font-weight:700;color:#333}
+    .user-email{font-size:14px;color:#666}
+
+    textarea{
+      width:100%;padding:18px;border:1.8px solid #e0e0e0;
+      border-radius:16px;font-size:15.8px;min-height:140px;
+      resize:none;font-family:inherit;background:#fff;
+      transition:0.3s;
+    }
+    textarea:focus{
+      outline:none;border-color:var(--p);
+      box-shadow:0 0 0 4px rgba(0,212,196,0.18);
+    }
+
+    .submit-btn{
+      background:var(--p);color:white;border:none;
+      padding:17px 48px;border-radius:50px;font-size:17px;
+      font-weight:700;cursor:pointer;margin-top:20px;
+      box-shadow:0 10px 30px rgba(0,212,196,0.4);transition:0.3s;
+    }
+    .submit-btn:active{transform:translateY(2px)}
+
+    .empty{
+      text-align:center;padding:130px 20px 100px;color:#888;
+    }
+    .empty i{font-size:80px;margin-bottom:20px;opacity:0.25}
+    .empty h3{font-size:23px;margin:16px 0;color:#555}
+    .empty p{font-size:15.5px;color:#777}
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="back-arrow" onclick="history.back()">
+      <i class="fas fa-arrow-left"></i>
+    </div>
+    <div class="title">Feedback & Reviews</div>
+  </div>
+
+  <div class="container">
+    <div class="form-card">
+      <div class="user-info">
+        <img src="" alt="" id="userPic">
+        <div>
+          <div class="user-name" id="userName">User</div>
+          <div class="user-email" id="userEmail">user@example.com</div>
+        </div>
+      </div>
+      <textarea placeholder="Share your experience with Two Dots... We value your feedback!"></textarea>
+      <button class="submit-btn" onclick="submitFeedback()">Submit Feedback</button>
+    </div>
+
+    <div class="empty">
+      <i class="fas fa-comment-dots"></i>
+      <h3>Your voice matters!</h3>
+      <p>Help us serve you better</p>
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("twoDotsUser") || "{}");
+    if (!user.email) location.href = "login.html";
+
+    const avatar = user.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name||"U")}&background=00d4c4&color=fff&bold=true&size=256`;
+    document.getElementById("userPic").src = avatar;
+    document.getElementById("userName").textContent = user.name || "User";
+    document.getElementById("userEmail").textContent = user.email || "";
+
+    function submitFeedback() {
+      const text = document.querySelector("textarea").value.trim();
+      if (!text) return alert("Please write your feedback");
+
+      const feedback = {
+        userId: user.id,
+        name: user.name,
+        email: user.email,
+        text,
+        date: new Date().toLocaleDateString("en-IN"),
+        time: new Date().toLocaleTimeString("en-IN", {hour: '2-digit', minute:'2-digit'})
+      };
+
+      let all = JSON.parse(localStorage.getItem("twoDotsFeedback") || "[]");
+      all.unshift(feedback); // latest first
+      localStorage.setItem("twoDotsFeedback", JSON.stringify(all));
+
+      alert("Thank you for your valuable feedback!");
+      document.querySelector("textarea").value = "";
+    }
+  </script>
+</body>
+</html>

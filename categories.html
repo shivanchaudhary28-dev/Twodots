@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Categories • Two Dots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { margin:0; padding-bottom:90px; background:#f8f8f8; font-family:'Poppins',sans-serif; }
+    .top-tabs { display:flex; background:white; position:sticky; top:0; z-index:99; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
+    .tab { flex:1; padding:18px; text-align:center; font-weight:600; color:#666; cursor: pointer; }
+    .tab.active { color:#00b3a6; border-bottom:3px solid #00b3a6; }
+    .cat-grid { padding:20px 16px; display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    .cat-card { background:white; border-radius:16px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.07); text-decoration:none; }
+    .cat-card:active { transform:scale(0.96); }
+    .cat-img { width:100%; height:170px; object-fit:cover; }
+    .cat-title { padding:14px; text-align:center; font-weight:600; font-size:14.5px; color:#222; }
+   
+    .bottom-nav {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      background: #fff;
+      display: flex;
+      height: 68px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      overflow: hidden;
+      z-index: 1000;
+    }
+   
+    .nav-item { flex:1; text-align:center; padding:10px 0; color:#888; font-size:11px; font-weight:500; text-decoration:none; }
+    .nav-item.active { color:#00b3a6; }
+    .nav-item i { font-size:23px; display:block; margin-bottom:4px; }
+
+    .cat-card[data-category] {
+      display: block;
+    }
+    .cat-card.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-tabs">
+    <div class="tab active" data-filter="men">MEN</div>
+    <div class="tab" data-filter="women">WOMEN</div>
+    
+  </div>
+
+  <div class="cat-grid">
+    <!-- Men's Categories -->
+    <a href="catalog.html?filter=new" class="cat-card" data-category="men">
+      <img src="images/printed1.jpeg" class="cat-img" alt="New">
+      <div class="cat-title">New Arrival</div>
+    </a>
+    <a href="catalog.html?filter=printed" class="cat-card" data-category="men">
+      <img src="images/printed2.jpeg" class="cat-img" alt="Printed">
+      <div class="cat-title">Text Printed</div>
+    </a>
+    <a href="catalog.html?filter=oversized" class="cat-card" data-category="men">
+      <img src="images/oversized1.jpeg" class="cat-img" alt="Oversized">
+      <div class="cat-title">Oversized Tees</div>
+    </a>
+    <a href="catalog.html?filter=simple" class="cat-card" data-category="men">
+      <img src="images/simple1.jpeg" class="cat-img" alt="Simple">
+      <div class="cat-title">Plain & Simple</div>
+    </a>
+
+    <!-- Women's Categories -->
+    <a href="catalog.html?filter=women" class="cat-card" data-category="women">
+      <img src="images/womens1.jpeg" class="cat-img" alt="Women">
+      <div class="cat-title">Women's Collection</div>
+    </a>
+    
+
+
+
+  <!-- BOTTOM NAVIGATION - PROFILE ICON -->
+  <div class="bottom-nav">
+    <a href="index.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="categories.html" class="nav-item active"><i class="fas fa-th-large"></i><span>Shop</span></a>
+    <a href="cart.html" class="nav-item"><i class="fas fa-shopping-bag"></i><span>Bag</span></a>
+    
+    <!-- SMART PROFILE BUTTON -->
+    <a href="login.html" id="profileBottomBtn" class="nav-item">
+      <div id="profileAvatar" style="width:32px;height:32px;border-radius:50%;overflow:hidden;margin:0 auto 4px;background:#ddd;border:3px solid #00b3a6;">
+        <img id="profileAvatarImg" src="https://via.placeholder.com/80/ddd/999?text=?" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <span id="profileText">Account</span>
+    </a>
+  </div>
+  
+    <script src="script.js"></script>
+
+  <script>
+    // Tab switching functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabs = document.querySelectorAll('.tab');
+      const categoryCards = document.querySelectorAll('.cat-card');
+      
+      function filterCategories(category) {
+        categoryCards.forEach(card => {
+          if (category === 'all' || card.getAttribute('data-category') === category) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      }
+      
+      // Show only men's categories by default
+      filterCategories('men');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // Remove active class from all tabs
+          tabs.forEach(t => t.classList.remove('active'));
+          // Add active class to clicked tab
+          this.classList.add('active');
+          
+          // Filter categories based on selected tab
+          const category = this.getAttribute('data-filter');
+          filterCategories(category);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

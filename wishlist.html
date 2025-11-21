@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wishlist • Two Dots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root{--p:#00d4c4}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Poppins',sans-serif;background:#f9f9f9;color:#333;min-height:100vh}
+
+    .header{position:sticky;top:0;background:#fff;z-index:100;padding:14px 16px;display:flex;align-items:center;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+    .back-arrow{width:42px;height:42px;display:flex;align-items:center;justify-content:center;background:#f0fdfc;border-radius:50%;color:var(--p);font-size:21px;cursor:pointer;}
+    .title{font-size:20px;font-weight:700;color:var(--p);margin-left:12px}
+
+    .container{max-width:600px;margin:0 auto;padding:20px 16px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:16px;margin-top:10px;}
+    .item{background:white;border-radius:18px;overflow:hidden;box-shadow:0 8px 25px rgba(0,0,0,0.08);transition:0.3s;position:relative;cursor:pointer;}
+    .item:hover{transform:translateY(-6px);box-shadow:0 15px 35px rgba(0,0,0,0.12)}
+    .item img{width:100%;height:190px;object-fit:cover;border-radius:18px 18px 0 0;}
+    .info{padding:14px 10px}
+    .name{font-weight:600;font-size:14.5px;margin:6px 0;height:40px;overflow:hidden}
+    .price{color:var(--p);font-weight:700;font-size:16px}
+
+    .empty{text-align:center;padding:120px 20px 80px;color:#888;}
+    .empty i{font-size:80px;margin-bottom:20px;opacity:0.25;}
+    .empty h3{font-size:22px;margin:16px 0;color:#555;}
+    .empty p{font-size:15px;margin-bottom:30px;color:#777;}
+    .continue-btn{background:var(--p);color:white;border:none;padding:16px 40px;border-radius:50px;font-size:17px;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(0,212,196,0.4);transition:0.3s;}
+    .continue-btn:active{transform:translateY(2px)}
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="back-arrow" onclick="history.back()"><i class="fas fa-arrow-left"></i></div>
+    <div class="title">My Wishlist</div>
+  </div>
+
+  <div class="container">
+    <div id="wishlistGrid" class="grid"></div>
+
+    <div id="empty" class="empty" style="display:none">
+      <i class="far fa-heart"></i>
+      <h3>Your wishlist is empty</h3>
+      <p>Add items you love to save them for later</p>
+      <button class="continue-btn" onclick="location.href='index.html'">Continue Shopping</button>
+    </div>
+  </div>
+
+<script>
+  // AUTO-CONVERT RELATIVE URLs TO ABSOLUTE (this fixes everything!)
+  function fixImageUrl(url) {
+    if (!url) return "";
+    try {
+      return new URL(url, window.location.href).href;
+    } catch {
+      return url;
+    }
+  }
+
+  const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+  const grid = document.getElementById("wishlistGrid");
+  const empty = document.getElementById("empty");
+
+  if (wishlist.length === 0) {
+    empty.style.display = "block";
+    grid.style.display = "none";
+  } else {
+    empty.style.display = "none";
+    grid.style.display = "grid";
+
+    grid.innerHTML = wishlist.map(product => `
+      <div class="item" onclick="location.href='product.html?id=${product.id}'">
+        <img src="${fixImageUrl(product.image)}" alt="${product.name}" loading="lazy">
+        <div class="info">
+          <div class="name">${product.name}</div>
+          <div class="price">₹${product.price}</div>
+        </div>
+        <button onclick="event.stopPropagation(); removeFromWishlist(${product.id})" 
+                style="position:absolute;top:10px;right:10px;background:white;border:none;padding:10px;border-radius:50%;box-shadow:0 4px 15px rgba(0,0,0,0.2);cursor:pointer;z-index:10;">
+          <i class="fas fa-heart" style="color:#e91e63;font-size:18px;"></i>
+        </button>
+      </div>
+    `).join("");
+  }
+
+  window.removeFromWishlist = function(id) {
+    let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    wishlist = wishlist.filter(item => item.id != id);
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    location.reload();
+  };
+</script>
+
+</body>
+</html>

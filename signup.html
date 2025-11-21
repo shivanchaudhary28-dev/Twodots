@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up • Two Dots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root{--p:#00d4c4;--gray:#f0f0f0}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(135deg,#00d4c4,#00b3a6);
+      min-height:100vh;
+      display:flex;align-items:center;justify-content:center;
+      padding:20px;
+    }
+    .card{
+      background:white;max-width:420px;width:100%;
+      border-radius:28px;overflow:hidden;
+      box-shadow:0 20px 60px rgba(0,0,0,0.25);
+    }
+    .header{
+      background:linear-gradient(135deg,var(--p),#00b3a6);
+      color:white;text-align:center;padding:40px 30px;
+    }
+    .header h1{font-size:28px;font-weight:700;margin-bottom:8px}
+    .header p{font-size:15px;opacity:0.9}
+
+    .form{padding:32px 28px}
+    .input-group{
+      position:relative;margin-bottom:22px;
+    }
+    .input-group i{
+      position:absolute;left:18px;top:50%;transform:translateY(-50%);
+      color:#888;font-size:19px;z-index:2;
+    }
+    .input-group input,
+    .input-group select{
+      width:100%;padding:17px 17px 17px 56px;
+      border:1.8px solid #e0e0e0;border-radius:16px;
+      font-size:15.5px;background:#fff;
+      transition:all 0.3s;
+    }
+    .input-group input:focus,
+    .input-group select:focus{
+      outline:none;border-color:var(--p);
+      box-shadow:0 0 0 4px rgba(0,212,196,0.2);
+    }
+    .input-group select{
+      appearance:none;
+      background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+      background-repeat:no-repeat;
+      background-position:right 16px center;
+      background-size:12px;
+    }
+
+    .btn{
+      width:100%;padding:18px;background:var(--p);color:white;
+      border:none;border-radius:50px;font-size:17px;font-weight:700;
+      cursor:pointer;margin-top:15px;
+      box-shadow:0 8px 25px rgba(0,212,196,0.4);transition:0.3s;
+    }
+    .btn:active{transform:translateY(2px)}
+
+    .switch{text-align:center;margin-top:24px;font-size:15px;color:#666}
+    .switch a{color:var(--p);font-weight:600;text-decoration:none}
+
+    @media (max-width:480px){
+      .card{border-radius:22px}
+      .header{padding:35px 25px}
+      .form{padding:28px 22px}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="header">
+      <h1>Join Two Dots</h1>
+      <p>Create your account</p>
+    </div>
+
+    <div class="form">
+      <!-- 1. Full Name -->
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input type="text" id="name" placeholder="Full Name" required>
+      </div>
+
+      <!-- 2. Date of Birth -->
+      <div class="input-group">
+        <i class="fas fa-calendar-alt"></i>
+        <input type="date" id="dob" required>
+      </div>
+
+      <!-- 3. Phone Number -->
+      <div class="input-group">
+        <i class="fas fa-phone"></i>
+        <input type="tel" id="phone" placeholder="Phone Number" maxlength="10" required>
+      </div>
+
+      <!-- 4. Email -->
+      <div class="input-group">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="email" placeholder="Email Address" required>
+      </div>
+
+      <!-- 5. Password -->
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="pass" placeholder="Create Password (6+ chars)" required>
+      </div>
+
+      <!-- 6. Gender (Optional) -->
+      <div class="input-group">
+        <i class="fas fa-venus-mars"></i>
+        <select id="gender">
+          <option value="" disabled selected>Select Gender (optional)</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <button class="btn" onclick="signup()">Create Account</button>
+
+      <div class="switch">
+        Already have an account? <a href="login.html">Login</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function signup() {
+      const name = document.getElementById("name").value.trim();
+      const dob = document.getElementById("dob").value;
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const pass = document.getElementById("pass").value;
+      const gender = document.getElementById("gender").value || "Not specified";
+
+      if (!name || !dob || !phone || !email || !pass) {
+        return alert("Please fill all required fields");
+      }
+      if (phone.length !== 10) {
+        return alert("Enter valid 10-digit phone number");
+      }
+      if (pass.length < 6) {
+        return alert("Password must be 6+ characters");
+      }
+
+      let users = JSON.parse(localStorage.getItem("twoDotsUsers") || "[]");
+
+      if (users.find(u => u.email === email)) {
+        return alert("Email already registered");
+      }
+      if (users.find(u => u.phone === phone)) {
+        return alert("Phone number already registered");
+      }
+
+      const newUser = {
+        id: Date.now(),
+        name,
+        email,
+        phone,
+        password: pass,
+        dob,
+        gender,
+        photo: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=00d4c4&color=fff&bold=true&size=256`,
+        address: "", city: "", pincode: ""
+      };
+
+      users.push(newUser);
+      localStorage.setItem("twoDotsUsers", JSON.stringify(users));
+      localStorage.setItem("twoDotsUser", JSON.stringify(newUser));
+
+      alert("Account created successfully!");
+      location.href = "account.html";
+    }
+
+    // Prevent signup if already logged in
+    if (localStorage.getItem("twoDotsUser")) location.href = "account.html";
+  </script>
+</body>
+</html>

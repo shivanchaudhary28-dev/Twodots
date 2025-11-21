@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Account • Two Dots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root{--p:#00d4c4;--red:#e91e63}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Poppins',sans-serif;background:#fff;color:#333;line-height:1.5}
+    
+    .header{
+      position:sticky;top:0;background:#fff;z-index:100;
+      padding:14px 16px;display:flex;align-items:center;gap:16px;
+      box-shadow:0 2px 10px rgba(0,0,0,0.08);border-bottom:1px solid #eee;
+    }
+    .back-arrow{
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      background:#f0fdfc;border-radius:50%;color:var(--p);font-size:20px;cursor:pointer;transition:0.2s;
+    }
+    .back-arrow:active{transform:scale(0.92)}
+    .user-info{display:flex;align-items:center;gap:12px;flex:1}
+    .pic{width:48px;height:48px;border-radius:50%;border:3px solid var(--p);object-fit:cover}
+    .name{font-weight:700;font-size:17px}
+    .email{font-size:13px;color:#666}
+
+    .hero{
+      background:linear-gradient(135deg,var(--p),#00b3a6);
+      color:white;text-align:center;padding:40px 20px 50px;
+      margin-bottom:-20px;border-bottom-left-radius:30px;border-bottom-right-radius:30px;
+    }
+    .hero-img{
+      width:100px;height:100px;border-radius:50%;border:5px solid rgba(255,255,255,0.3);
+      object-fit:cover;margin:0 auto 12px;display:block;
+    }
+    .hero-name{font-size:24px;font-weight:700;margin:8px 0}
+    .change-photo{
+      background:rgba(255,255,255,0.25);padding:10px 28px;border-radius:50px;
+      font-size:14px;font-weight:600;display:inline-block;margin-top:8px;cursor:pointer;
+      transition:0.2s;
+    }
+    .change-photo:active{transform:scale(0.95)}
+
+    .menu{
+      margin:24px 16px 40px;background:white;border-radius:20px;
+      overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.1);
+    }
+    .item{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:18px 20px;border-bottom:1px solid #f5f5f5;cursor:pointer;
+      transition:0.2s;
+    }
+    .item:last-child{border:none}
+    .item:hover{background:#f8fffe}
+    .item i:first-child{color:var(--p);font-size:20px;width:36px}
+    .item span{font-weight:600;font-size:15.5px}
+    .item i:last-child{color:#aaa;font-size:18px}
+
+    .logout{
+      background:var(--red);color:white;border:none;
+      width:92%;max-width:400px;margin:0 auto 30px;display:block;
+      padding:16px;border-radius:50px;font-size:17px;font-weight:700;
+      cursor:pointer;box-shadow:0 10px 30px rgba(233,30,99,0.3);transition:0.3s;
+    }
+    .logout:active{transform:translateY(2px)}
+
+    @media (max-width:480px){
+      .header{padding:12px 14px}
+      .back-arrow{width:36px;height:36px;font-size:18px}
+      .hero{padding:35px 16px 45px}
+      .menu{margin:20px 12px 30px}
+      .item{padding:16px 18px}
+    }
+    input[type="file"]{display:none}
+    
+        /* Bottom Nav */
+    .bottom-nav {
+      position: fixed;
+      left: 12px; right: 12px; bottom: 14px;
+      height: 68px;
+      background: white;
+      border-radius: 24px;
+      display: flex;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+    .nav-item { flex:1; text-align:center; padding:10px 0; color:#888; font-size:11px; text-decoration:none; }
+    .nav-item.active { color:#00b3a6; }
+    .nav-item i { font-size:24px; display:block; margin-bottom:4px; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="back-arrow" onclick="history.back()">
+      <i class="fas fa-arrow-left"></i>
+    </div>
+    <div class="user-info">
+      <img src="" alt="" class="pic" id="smallPic">
+      <div>
+        <div class="name" id="name">User</div>
+        <div class="email" id="email">user@example.com</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <img src="" alt="" class="hero-img" id="bigPic">
+    <div class="hero-name" id="heroName">User</div>
+    <div id="heroEmail" style="opacity:0.9;font-size:14px">user@example.com</div>
+    <div class="change-photo" onclick="document.getElementById('photoInput').click()">
+      Change Photo
+    </div>
+    <input type="file" id="photoInput" accept="image/*">
+  </div>
+
+  <div class="menu">
+    <div class="item" onclick="location.href='edit-profile.html'">
+      <div><i class="fas fa-user-edit"></i><span>Edit Personal Details</span></div>
+      <i class="fas fa-chevron-right"></i>
+    </div>
+    <div class="item" onclick="location.href='orders.html'">
+      <div><i class="fas fa-box"></i><span>My Orders</span></div>
+      <i class="fas fa-chevron-right"></i>
+    </div>
+    <div class="item" onclick="location.href='wishlist.html'">
+      <div><i class="fas fa-heart"></i><span>Wishlist</span></div>
+      <i class="fas fa-chevron-right"></i>
+    </div>
+    <div class="item" onclick="location.href='addresses.html'">
+      <div><i class="fas fa-map-marker-alt"></i><span>Saved Addresses</span></div>
+      <i class="fas fa-chevron-right"></i>
+    </div>
+    <div class="item" onclick="location.href='feedback.html'">
+      <div><i class="fas fa-comment-dots"></i><span>Feedback & Reviews</span></div>
+      <i class="fas fa-chevron-right"></i>
+    </div>
+  </div>
+
+  <button class="logout" onclick="logout()">Logout</button>
+  
+  <!-- BOTTOM NAVIGATION - PROFILE ICON -->
+<div class="bottom-nav">
+  <a href="index.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="categories.html" class="nav-item"><i class="fas fa-th-large"></i><span>Shop</span></a>
+  <a href="cart.html" class="nav-item"><i class="fas fa-shopping-bag"></i><span>Bag</span></a>
+  
+  <!-- SMART PROFILE BUTTON -->
+  <a href="login.html" id="profileBottomBtn" class="nav-item">
+    <div id="profileAvatar" style="width:32px;height:32px;border-radius:50%;overflow:hidden;margin:0 auto 4px;background:#ddd;border:3px solid #00b3a6;">
+      <img id="profileAvatarImg" src="https://via.placeholder.com/80/ddd/999?text=?" style="width:100%;height:100%;object-fit:cover;">
+    </div>
+    <span id="profileText">Account</span>
+  </a>
+</div>
+
+  <script src="script.js"></script>
+
+  <script>
+    // Load user
+    const user = JSON.parse(localStorage.getItem("twoDotsUser") || "{}");
+    if (!user.email) {
+      alert("Please login first");
+      location.href = "login.html";
+    }
+
+    // Update UI
+    document.getElementById("name").textContent = user.name || "User";
+    document.getElementById("email").textContent = user.email || "";
+    document.getElementById("heroName").textContent = user.name || "User";
+    document.getElementById("heroEmail").textContent = user.email || "";
+
+    const avatar = user.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name||"U")}&background=00d4c4&color=fff&bold=true&size=256`;
+    document.getElementById("smallPic").src = avatar;
+    document.getElementById("bigPic").src = avatar;
+
+    // Photo upload
+    document.getElementById("photoInput").onchange = e => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const photo = ev.target.result;
+        user.photo = photo;
+        localStorage.setItem("twoDotsUser", JSON.stringify(user));
+
+        // Update images
+        document.getElementById("smallPic").src = photo;
+        document.getElementById("bigPic").src = photo;
+
+        // Update profile icon on ALL pages instantly
+        if (typeof updateProfileIcon === "function") {
+          updateProfileIcon();
+        }
+      };
+      reader.readAsDataURL(file);
+    };
+
+    // LOGOUT — CLEARS EVERYTHING & UPDATES BOTTOM NAV
+    function logout() {
+      if (confirm("Logout from Two Dots?")) {
+        localStorage.removeItem("twoDotsUser");
+        
+        // Update bottom nav icon instantly
+        if (typeof updateProfileIcon === "function") {
+          updateProfileIcon();
+        }
+
+        alert("Logged out successfully");
+        location.href = "index.html";
+      }
+    }
+
+    // Make logout global
+    window.logout = logout;
+  </script>
+</body>
+</html>

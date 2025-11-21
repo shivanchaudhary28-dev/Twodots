@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout • Two Dots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root{--p:#00d4c4;--g:#f8f8f8;--success:#e6f7f6}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Poppins',sans-serif;background:var(--g);color:#333;min-height:100vh;padding-bottom:120px}
+    
+    .header{
+      position:sticky;top:0;background:white;z-index:99;
+      box-shadow:0 2px 12px rgba(0,0,0,0.08);padding:14px 16px;
+      display:flex;align-items:center;gap:12px
+    }
+    .back-btn{font-size:24px;cursor:pointer;color:var(--p)}
+    .title{font-size:19px;font-weight:700;color:var(--p)}
+
+    .container{max-width:600px;margin:0 auto;padding:16px}
+
+    .section{
+      background:white;border-radius:16px;padding:20px;
+      margin-bottom:16px;box-shadow:0 4px 15px rgba(0,0,0,0.06)
+    }
+    h2{font-size:18px;font-weight:600;margin-bottom:16px;color:#222}
+
+    input,select{
+      width:100%;padding:15px;border:1.5px solid #ddd;
+      border-radius:12px;font-size:15px;margin-bottom:14px;
+      transition:border 0.3s
+    }
+    input:focus,select:focus{outline:none;border-color:var(--p)}
+    .row{display:flex;gap:12px}
+    .row input{flex:1}
+
+    .saved-note{
+      background:var(--success);color:#00665e;padding:14px;
+      border-radius:10px;font-size:14px;margin-bottom:16px;
+      border-left:4px solid var(--p);display:none
+    }
+
+    .pay-opt{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:18px;background:#f9f9f9;border-radius:12px;
+      margin:10px 0;cursor:pointer;transition:all 0.3s;
+      border:2px solid transparent
+    }
+    .pay-opt.active{
+      background:#e6f7f6;border:2px solid var(--p);
+    }
+    .pay-opt i{font-size:20px;color:var(--p);opacity:0}
+    .pay-opt.active i{opacity:1}
+
+    .total-row{
+      display:flex;justify-content:space-between;
+      font-size:17px;font-weight:600;margin:14px 0
+    }
+    .grand-total{font-size:20px;color:var(--p);font-weight:800}
+
+    .place-order-btn{
+      width:100%;padding:18px;background:var(--p);color:white;
+      border:none;border-radius:12px;font-size:18px;font-weight:700;
+      cursor:pointer;margin-top:20px;box-shadow:0 8px 25px rgba(0,212,196,0.4);
+      transition:transform 0.2s
+    }
+    .place-order-btn:hover{transform:translateY(-3px)}
+    .place-order-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+
+    .loading{display:none;text-align:center;padding:10px;color:var(--p)}
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="back-btn" onclick="history.back()">Back</div>
+    <div class="title">Checkout</div>
+  </div>
+
+  <div class="container">
+
+    <!-- Auto-fill Note -->
+    <div id="savedNote" class="saved-note">
+      Address auto-filled from your saved addresses
+    </div>
+
+    <div class="section">
+      <h2>Shipping Address</h2>
+      <form id="checkoutForm">
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="tel" id="phone" placeholder="Phone Number" maxlength="10" required>
+        <input type="text" id="pincode" placeholder="Pincode" maxlength="6" required>
+        
+        <input type="text" id="flat" placeholder="Flat / House No. / Building" required>
+        <input type="text" id="area" placeholder="Area / Street / Sector" required>
+        
+        <div class="row">
+          <input type="text" id="landmark" placeholder="Landmark (Optional)">
+          <input type="text" id="city" placeholder="Town / City" required>
+        </div>
+
+        <select id="state" required>
+          <option value="" disabled selected>Select State</option>
+          <option value="Delhi">Delhi</option>
+          <option value="Maharashtra">Maharashtra</option>
+          <option value="Karnataka">Karnataka</option>
+          <option value="Tamil Nadu">Tamil Nadu</option>
+          <option value="Gujarat">Gujarat</option>
+          <option value="West Bengal">West Bengal</option>
+          <option value="Uttar Pradesh">Uttar Pradesh</option>
+          <option value="Rajasthan">Rajasthan</option>
+          <option value="Punjab">Punjab</option>
+          <option value="Kerala">Kerala</option>
+          <option value="Telangana">Telangana</option>
+          <option value="Bihar">Bihar</option>
+          <option value="Andhra Pradesh">Andhra Pradesh</option>
+          <option value="Madhya Pradesh">Madhya Pradesh</option>
+          <option value="Odisha">Odisha</option>
+          <option value="Haryana">Haryana</option>
+        </select>
+      </form>
+    </div>
+
+    <div class="section">
+      <h2>Payment Method</h2>
+      <div class="pay-opt active" data-method="cod">
+        <div>Cash on Delivery (COD)</div>
+        <i class="fas fa-check"></i>
+      </div>
+      <div class="pay-opt" data-method="online">
+        <div>UPI / Card / Netbanking</div>
+        <i class="fas fa-check"></i>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Order Summary</h2>
+      <div class="total-row"><span>Items</span><span id="itemCount">0 items</span></div>
+      <div class="total-row"><span>Subtotal</span><span id="subtotal">₹0</span></div>
+      <div class="total-row"><span>Shipping</span><span style="color:green">FREE</span></div>
+      <div class="total-row grand-total"><span>Grand Total</span><span id="grandTotal">₹0</span></div>
+    </div>
+
+    <div class="loading" id="loading">
+      <i class="fas fa-spinner fa-spin"></i> Processing your order...
+    </div>
+
+    <button class="place-order-btn" id="placeOrder">PLACE ORDER</button>
+  </div>
+
+  <script>
+    // Payment method selection
+    document.querySelectorAll('.pay-opt').forEach(opt => {
+      opt.addEventListener('click', function() {
+        document.querySelectorAll('.pay-opt').forEach(o => o.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const cart = JSON.parse(localStorage.getItem("twoDotsCart") || "[]");
+      const user = JSON.parse(localStorage.getItem("twoDotsUser") || "{}");
+      const addresses = user.addresses || [];
+      const savedNote = document.getElementById("savedNote");
+      const placeOrderBtn = document.getElementById("placeOrder");
+      const loading = document.getElementById("loading");
+
+      // AUTO-FILL FROM DEFAULT ADDRESS
+      const defaultAddr = addresses.find(a => a.default);
+      if (defaultAddr) {
+        document.getElementById("name").value = defaultAddr.name || "";
+        document.getElementById("phone").value = defaultAddr.phone || "";
+        document.getElementById("pincode").value = defaultAddr.pincode || "";
+        document.getElementById("city").value = defaultAddr.city || "";
+        document.getElementById("state").value = defaultAddr.state || "";
+
+        // Smart split: House → Flat + Area
+        const house = defaultAddr.house || "";
+        const parts = house.split(",").map(p => p.trim());
+        document.getElementById("flat").value = parts[0] || "";
+        document.getElementById("area").value = parts.slice(1).join(", ") || "";
+
+        savedNote.style.display = "block";
+      }
+
+      // Calculate totals
+      const totalItems = cart.reduce((s, i) => s + i.qty, 0);
+      const totalPrice = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+
+      document.getElementById("itemCount").textContent = totalItems + (totalItems === 1 ? " item" : " items");
+      document.getElementById("subtotal").textContent = "₹" + totalPrice;
+      document.getElementById("grandTotal").textContent = "₹" + totalPrice;
+
+      // PLACE ORDER FUNCTION (Easy to migrate to backend)
+      async function placeOrder(orderData) {
+        // For now: Save to localStorage
+        // Later: Replace with API call to your backend
+        
+        try {
+          // Simulate API call delay
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          // Save order to localStorage (will be replaced with backend API)
+          const existingOrders = JSON.parse(localStorage.getItem("twoDotsOrders") || "[]");
+          existingOrders.push(orderData);
+          localStorage.setItem("twoDotsOrders", JSON.stringify(existingOrders));
+          
+          return { success: true, orderId: orderData.id };
+        } catch (error) {
+          console.error("Order placement failed:", error);
+          return { success: false, error: error.message };
+        }
+      }
+
+      // PLACE ORDER
+      placeOrderBtn.onclick = async () => {
+        if (cart.length === 0) return alert("Your cart is empty!");
+        if (!document.getElementById("checkoutForm").checkValidity()) 
+          return alert("Please fill all required fields");
+
+        // Get selected payment method
+        const paymentMethod = document.querySelector('.pay-opt.active').dataset.method;
+        
+        // Create complete order object (Backend-ready structure)
+        const order = {
+          id: "ORD-" + Date.now(),
+          date: new Date().toISOString(),
+          status: "confirmed",
+          paymentMethod: paymentMethod,
+          userDetails: {
+            name: document.getElementById("name").value.trim(),
+            phone: document.getElementById("phone").value.trim(),
+            address: {
+              flat: document.getElementById("flat").value.trim(),
+              area: document.getElementById("area").value.trim(),
+              landmark: document.getElementById("landmark").value.trim(),
+              city: document.getElementById("city").value.trim(),
+              state: document.getElementById("state").value,
+              pincode: document.getElementById("pincode").value.trim()
+            }
+          },
+          items: cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            image: item.image,
+            size: item.size,
+            quantity: item.qty,
+            price: item.price
+          })),
+          total: totalPrice,
+          shipping: 0,
+          grandTotal: totalPrice
+        };
+
+        // Show loading state
+        placeOrderBtn.disabled = true;
+        loading.style.display = 'block';
+
+        try {
+          // Place order (currently localStorage, will be API call)
+          const result = await placeOrder(order);
+
+          if (result.success) {
+            // Save address for future orders
+            const newAddr = {
+              name: order.userDetails.name,
+              phone: order.userDetails.phone,
+              house: order.userDetails.address.flat + 
+                     (order.userDetails.address.area ? ", " + order.userDetails.address.area : ""),
+              city: order.userDetails.address.city,
+              state: order.userDetails.address.state,
+              pincode: order.userDetails.address.pincode,
+              default: true
+            };
+
+            // Update user addresses
+            user.addresses = addresses.filter(a => !a.default);
+            user.addresses.push(newAddr);
+            localStorage.setItem("twoDotsUser", JSON.stringify(user));
+
+            // Clear cart
+            localStorage.removeItem("twoDotsCart");
+            
+            // Show success message and redirect to thank you page
+            alert("Order placed successfully! Thank you for shopping with Two Dots");
+            
+            // Simple redirect to thank you page
+            setTimeout(() => {
+              window.location.href = "thank-you.html";
+            }, 1500);
+            
+          } else {
+            throw new Error(result.error);
+          }
+        } catch (error) {
+          alert("Failed to place order. Please try again.");
+          console.error("Order error:", error);
+        } finally {
+          placeOrderBtn.disabled = false;
+          loading.style.display = 'none';
+        }
+      };
+
+      // Update cart badge if function exists
+      if (typeof updateCartBadge === "function") updateCartBadge();
+    });
+  </script>
+</body>
+</html>

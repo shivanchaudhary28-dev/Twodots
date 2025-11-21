@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Collection • Two Dots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    html, body { width:100%; overflow-x:hidden !important; font-family:'Poppins',sans-serif; background:#f8f8f8; }
+    body { padding-bottom:100px; }
+
+    .catalog-header { position:sticky; top:0; background:white; z-index:98; padding:15px 0; box-shadow:0 2px 12px rgba(0,0,0,0.08); }
+    .catalog-nav { display:flex; align-items:center; justify-content:space-between; padding:0 15px; }
+    .back-btn { font-size:24px; color:#333; cursor:pointer; }
+    .catalog-title h1 { font-size:19px; font-weight:600; }
+    .count { font-size:13px; color:#888; }
+
+    .search-bar { margin:14px 15px; position:relative; }
+    .search-bar input {
+      width:100%; padding:16px 50px; border:none; border-radius:30px;
+      font-size:15px; background:#f0f0f0; outline:none; box-shadow:inset 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .search-bar i { position:absolute; left:18px; top:50%; transform:translateY(-50%); color:#999; font-size:17px; }
+
+    .catalog-grid { padding:0 12px; display:grid; grid-template-columns:repeat(2,1fr); gap:15px; }
+    .catalog-card {
+      background:white; border-radius:18px; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,0.09);
+      transition:0.3s; text-decoration:none; color:inherit;
+    }
+    .catalog-card:hover { transform:translateY(-5px); box-shadow:0 12px 30px rgba(0,0,0,0.14); }
+    .catalog-card img { width:100%; height:230px; object-fit:cover; }
+    .card-info { padding:14px; }
+    .card-info h3 { font-size:14px; margin:8px 0; color:#222; line-height:1.4; }
+    .price-row { display:flex; align-items:center; gap:8px; }
+    .price { font-weight:700; font-size:15.5px; color:#00b3a6; }
+    .old-price { text-decoration:line-through; color:#999; font-size:13px; }
+    .discount { color:#e91e63; font-size:13px; font-weight:600; }
+
+    .filter-btn {
+      position:fixed; bottom:88px; right:20px; z-index:99;
+      background:#00b3a6; color:white; padding:16px 26px; border-radius:50px;
+      font-weight:700; font-size:15px; box-shadow:0 10px 30px rgba(0,179,166,0.45);
+      display:flex; align-items:center; gap:10px; letter-spacing:0.5px;
+    }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+      position:fixed; left:12px; right:12px; bottom:14px; height:70px; background:white;
+      border-radius:24px; display:flex; box-shadow:0 12px 35px rgba(0,0,0,0.2); z-index:1000;
+    }
+    .nav-item { flex:1; text-align:center; padding:12px 0; color:#888; font-size:11px; text-decoration:none; }
+    .nav-item.active { color:#00b3a6; }
+    .nav-item i { font-size:24px; display:block; margin-bottom:5px; }
+
+    /* FILTER PANEL — BEAUTIFUL & PREMIUM */
+    .filter-panel {
+      position:fixed; bottom:-100%; left:0; right:0; background:white;
+      border-top-left-radius:28px; border-top-right-radius:28px;
+      box-shadow:0 -15px 40px rgba(0,0,0,0.22); z-index:1001;
+      transition:bottom 0.45s cubic-bezier(0.68,-0.55,0.27,1.55);
+      max-height:78vh;
+    }
+    .filter-panel.active { bottom:0; }
+    .filter-header {
+      padding:22px 20px; text-align:center; position:relative; border-bottom:1px solid #f0f0f0;
+    }
+    .filter-header::before {
+      content:""; position:absolute; top:12px; left:50%; transform:translateX(-50%);
+      width:60px; height:6px; background:#ccc; border-radius:10px;
+    }
+    .filter-header h3 { font-size:20px; font-weight:700; color:#222; }
+    .close-filter { position:absolute; right:20px; top:50%; transform:translateY(-50%); font-size:32px; color:#999; cursor:pointer; }
+
+    .filter-content { padding:24px 20px; overflow-y:auto; height:calc(100% - 80px); }
+
+    .filter-group { margin-bottom:38px; }
+    .filter-group h4 {
+      font-size:16px; font-weight:700; color:#222; margin-bottom:18px; position:relative; padding-bottom:8px;
+    }
+    .filter-group h4::after {
+      content:''; position:absolute; bottom:0; left:0; width:40px; height:3px; background:#00b3a6; border-radius:2px;
+    }
+
+    /* ULTRA-PRETTY COLOUR FILTER */
+    .color-swatches {
+      display:flex; gap:20px; flex-wrap:wrap; justify-content:flex-start;
+    }
+    .color-swatches label {
+      cursor:pointer; position:relative;
+    }
+    .color-swatches input { display:none; }
+    .color-swatches span {
+      display:block; width:52px; height:52px; border-radius:50%;
+      border:4px solid transparent; transition:all 0.3s ease;
+      box-shadow:0 4px 15px rgba(0,0,0,0.12);
+    }
+    .color-swatches input:checked + span {
+      border-color:#00b3a6; transform:scale(1.18);
+      box-shadow:0 0 0 5px rgba(0,179,166,0.22), 0 8px 25px rgba(0,179,166,0.3);
+    }
+    .color-swatches input:checked + span::after {
+      content:"✓"; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      color:white; font-weight:900; font-size:18px;
+    }
+
+    /* GORGEOUS PRICE SLIDER */
+    .price-slider {
+      position:relative; height:10px; background:#e8e8e8; border-radius:12px; margin:28px 0;
+      box-shadow:inset 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .price-slider .progress {
+      position:absolute; height:100%; background:linear-gradient(90deg,#00b3a6,#00d4c4);
+      border-radius:12px; left:0%; right:100%; transition:all 0.3s;
+      box-shadow:0 0 15px rgba(0,179,166,0.4);
+    }
+    .price-slider input[type=range] {
+      position:absolute; width:100%; height:100%; background:none; pointer-events:none;
+      -webkit-appearance:none; border-radius:12px;
+    }
+    .price-slider input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance:none; height:28px; width:28px; border-radius:50%;
+      background:white; pointer-events:auto; cursor:pointer;
+      box-shadow:0 6px 20px rgba(0,179,166,0.5);
+      border:4px solid #00b3a6;
+    }
+    .price-values {
+      display:flex; justify-content:space-between; margin-top:16px;
+      font-size:17px; font-weight:700; color:#00b3a6;
+    }
+
+    .filter-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:1000; }
+    .filter-overlay.active { display:block; }
+  </style>
+</head>
+<body>
+
+  <header class="catalog-header">
+    <div class="catalog-nav">
+      <i class="fas fa-arrow-left back-btn" onclick="history.back()"></i>
+      <div class="catalog-title">
+        <h1 id="pageTitle">Collection</h1>
+        <span class="count" id="productCount">0 Products</span>
+      </div>
+      <div style="width:40px;"></div>
+    </div>
+  </header>
+
+  <div class="search-bar">
+    <i class="fas fa-search"></i>
+    <input type="text" id="searchInput" placeholder="Search in Two Dots...">
+  </div>
+
+  <div class="catalog-grid" id="catalogGrid"></div>
+
+  <div class="filter-btn" id="openFilter">
+    <i class="fas fa-sliders-h"></i> Filter & Sort
+  </div>
+
+  <!-- GORGEOUS FILTER PANEL -->
+  <div class="filter-panel" id="filterPanel">
+    <div class="filter-header">
+      <h3>Refine Your Style</h3>
+      <span class="close-filter" id="closeFilter">×</span>
+    </div>
+    <div class="filter-content">
+
+      <!-- COLOUR FILTER — SUPER PREMIUM -->
+      <div class="filter-group">
+        <h4>Colour</h4>
+        <div class="color-swatches">
+          <label><input type="checkbox" value="black" checked><span style="background:#1a1a1a"></span></label>
+          <label><input type="checkbox" value="white" checked><span style="background:#ffffff;border:2px solid #eee;"></span></label>
+          <label><input type="checkbox" value="navy" checked><span style="background:#1e3a8a"></span></label>
+          <label><input type="checkbox" value="red" checked><span style="background:#dc2626"></span></label>
+          <label><input type="checkbox" value="grey" checked><span style="background:#6b7280"></span></label>
+          <label><input type="checkbox" value="green" checked><span style="background:#16a34a"></span></label>
+        </div>
+      </div>
+
+      <!-- PRICE FILTER — ELEGANT & SMOOTH -->
+      <div class="filter-group">
+        <h4>Price Range</h4>
+        <div class="price-slider">
+          <div class="progress" id="progress"></div>
+          <input type="range" min="299" max="1499" value="299" id="priceMin">
+          <input type="range" min="299" max="1499" value="1499" id="priceMax">
+        </div>
+        <div class="price-values">
+          <span>₹<span id="minValue">299</span></span>
+          <span>₹<span id="maxValue">1499</span></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="filter-overlay" id="filterOverlay"></div>
+
+<!-- BOTTOM NAVIGATION - PROFILE ICON -->
+<div class="bottom-nav">
+  <a href="index.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="categories.html" class="nav-item"><i class="fas fa-th-large"></i><span>Shop</span></a>
+  <a href="cart.html" class="nav-item"><i class="fas fa-shopping-bag"></i><span>Bag</span></a>
+  
+  <!-- SMART PROFILE BUTTON -->
+  <a href="login.html" id="profileBottomBtn" class="nav-item">
+    <div id="profileAvatar" style="width:32px;height:32px;border-radius:50%;overflow:hidden;margin:0 auto 4px;background:#ddd;border:3px solid #00b3a6;">
+      <img id="profileAvatarImg" src="https://via.placeholder.com/80/ddd/999?text=?" style="width:100%;height:100%;object-fit:cover;">
+    </div>
+    <span id="profileText">Account</span>
+  </a>
+</div>
+
+  <script src="script.js"></script>
+  
+  <script>
+    // Wait for the main script to load and initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      // This will be handled by the main script.js
+      console.log('Catalog page loaded, waiting for main script initialization...');
+      
+      // Update page title based on filter
+      const urlParams = new URLSearchParams(window.location.search);
+      const filter = urlParams.get('filter');
+      const titleElement = document.getElementById('pageTitle');
+      
+      if (filter && titleElement) {
+        const categoryTitles = {
+          'new': 'New Arrivals',
+          'printed': 'Printed T-Shirts',
+          'women': "Women's Collection",
+          'oversized': 'Oversized Tees',
+          'simple': 'Plain & Simple'
+        };
+        titleElement.textContent = categoryTitles[filter] || 'Collection';
+      }
+    });
+  </script>
+</body>
+</html>

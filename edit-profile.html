@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile • Two Dots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root{--p:#00d4c4;--gray:#f0f0f0}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:#f9f9f9;
+      color:#333;
+      min-height:100vh;
+    }
+
+    /* Header */
+    .header{
+      position:sticky;top:0;background:#fff;z-index:100;
+      padding:14px 16px;display:flex;align-items:center;
+      box-shadow:0 2px 12px rgba(0,0,0,0.08);
+      border-bottom:1px solid #eee;
+    }
+    .back-arrow{
+      width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+      background:#f0fdfc;border-radius:50%;color:var(--p);
+      font-size:21px;cursor:pointer;transition:0.2s;
+    }
+    .back-arrow:active{transform:scale(0.92)}
+    .title{
+      font-size:20px;font-weight:700;color:var(--p);
+      flex:1;text-align:center;margin-right:42px;
+    }
+
+    /* Main Container */
+    .container{
+      max-width:500px;margin:24px auto;padding:0 20px;
+    }
+    .card{
+      background:white;
+      border-radius:20px;
+      padding:28px 24px;
+      box-shadow:0 10px 35px rgba(0,0,0,0.08);
+      border:1px solid #f0f0f0;
+    }
+
+    /* Input Fields */
+    .input-group{
+      position:relative;
+      margin-bottom:22px;
+    }
+    .input-group i{
+      position:absolute;left:18px;top:50%;transform:translateY(-50%);
+      color:#888;font-size:19px;z-index:2;
+    }
+    .input-group input,
+    .input-group select{
+      width:100%;
+      padding:17px 17px 17px 56px;
+      border:1.5px solid #e0e0e0;
+      border-radius:16px;
+      font-size:15.5px;
+      background:#fff;
+      transition:all 0.3s ease;
+    }
+    .input-group input:focus,
+    .input-group select:focus{
+      outline:none;
+      border-color:var(--p);
+      box-shadow:0 0 0 4px rgba(0,212,196,0.18);
+    }
+    .input-group select{
+      appearance:none;
+      background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+      background-repeat:no-repeat;
+      background-position:right 16px center;
+      background-size:12px;
+    }
+
+    /* Save Button - Perfectly Aligned */
+    .save-btn{
+      margin-top:30px;
+      width:100%;
+      padding:18px;
+      background:var(--p);
+      color:white;
+      border:none;
+      border-radius:50px;
+      font-size:17px;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow:0 8px 25px rgba(0,212,196,0.35);
+      transition:all 0.3s ease;
+    }
+    .save-btn:active{
+      transform:translateY(2px);
+      box-shadow:0 4px 15px rgba(0,212,196,0.3);
+    }
+
+    /* Responsive */
+    @media (max-width:480px){
+      .container{padding:0 16px;margin:16px auto}
+      .card{padding:24px 20px;border-radius:18px}
+      .input-group{margin-bottom:20px}
+      .input-group input,
+      .input-group select{padding:16px 16px 16px 54px;font-size:15.5px}
+      .save-btn{padding:17px;font-size:16.5px}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="back-arrow" onclick="history.back()">
+      <i class="fas fa-arrow-left"></i>
+    </div>
+    <div class="title">Edit Profile</div>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input type="text" id="name" placeholder="Full Name" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="email" placeholder="Email Address" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fas fa-phone"></i>
+        <input type="tel" id="phone" placeholder="Phone Number" maxlength="10" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fas fa-calendar-alt"></i>
+        <input type="date" id="dob" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fas fa-venus-mars"></i>
+        <select id="gender" required>
+          <option value="" disabled selected>Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <i class="fas fa-home"></i>
+        <input type="text" id="address" placeholder="House No., Building, Street" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fas fa-city"></i>
+        <input type="text" id="city" placeholder="City" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fas fa-map-marker-alt"></i>
+        <input type="text" id="pincode" placeholder="Pincode" maxlength="6" required>
+      </div>
+
+      <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("twoDotsUser") || "{}");
+
+    // Load existing data
+    document.getElementById("name").value = user.name || "";
+    document.getElementById("email").value = user.email || "";
+    document.getElementById("phone").value = user.phone || "";
+    document.getElementById("dob").value = user.dob || "";
+    document.getElementById("gender").value = user.gender || "";
+    document.getElementById("address").value = user.address || "";
+    document.getElementById("city").value = user.city || "";
+    document.getElementById("pincode").value = user.pincode || "";
+
+    function saveProfile() {
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const dob = document.getElementById("dob").value;
+      const gender = document.getElementById("gender").value;
+      const address = document.getElementById("address").value.trim();
+      const city = document.getElementById("city").value.trim();
+      const pincode = document.getElementById("pincode").value.trim();
+
+      if (!name || !phone || !dob || !gender || !address || !city || !pincode) {
+        return alert("Please fill all fields");
+      }
+      if (phone.length !== 10) {
+        return alert("Enter valid 10-digit phone number");
+      }
+
+      // Save updated user
+      const updatedUser = {
+        ...user,
+        name, email: document.getElementById("email").value,
+        phone, dob, gender, address, city, pincode
+      };
+
+      localStorage.setItem("twoDotsUser", JSON.stringify(updatedUser));
+      
+      // Update in all users list
+      let allUsers = JSON.parse(localStorage.getItem("twoDotsUsers") || "[]");
+      allUsers = allUsers.map(u => u.id === user.id ? updatedUser : u);
+      localStorage.setItem("twoDotsUsers", JSON.stringify(allUsers));
+
+      alert("Profile saved successfully!");
+      history.back();
+    }
+  </script>
+</body>
+</html>

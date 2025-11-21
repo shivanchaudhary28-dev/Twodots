@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thank You - Two Dots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root {
+      --primary: #00d4c4;
+      --background: #f8f8f8;
+      --success: #e6f7f6;
+      --text: #333;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--background);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .container {
+      flex: 1;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 60px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .success-icon {
+      font-size: 80px;
+      color: #4caf50;
+      margin-bottom: 25px;
+      animation: bounce 1s ease-in-out;
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+      40% {transform: translateY(-10px);}
+      60% {transform: translateY(-5px);}
+    }
+    
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--primary);
+    }
+    
+    .subtitle {
+      font-size: 18px;
+      color: #666;
+      margin-bottom: 40px;
+      line-height: 1.6;
+      max-width: 400px;
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .btn {
+      padding: 15px 30px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 15px rgba(0,212,196,0.3);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    
+    .redirect-timer {
+      margin-top: 30px;
+      color: #666;
+      font-size: 14px;
+      background: var(--success);
+      padding: 12px 20px;
+      border-radius: 10px;
+      border-left: 3px solid var(--primary);
+    }
+    
+    .timer-number {
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .confetti {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 40px 15px;
+      }
+      
+      h1 {
+        font-size: 28px;
+      }
+      
+      .subtitle {
+        font-size: 16px;
+        margin-bottom: 30px;
+      }
+      
+      .btn-group {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="success-icon">
+      <i class="fas fa-check-circle"></i>
+    </div>
+    
+    <h1>Thank You!</h1>
+    <p class="subtitle">
+      Your order has been placed successfully. You will receive a confirmation email shortly.
+    </p>
+
+    <div class="btn-group">
+      <a href="orders.html" class="btn btn-primary">
+        <i class="fas fa-shopping-bag"></i>
+        View My Orders
+      </a>
+      <a href="index.html" class="btn btn-outline">
+        <i class="fas fa-home"></i>
+        Continue Shopping
+      </a>
+    </div>
+
+    <div class="redirect-timer">
+      Redirecting to home page in <span class="timer-number" id="countdown">5</span> seconds...
+    </div>
+  </div>
+
+  <script>
+    // Create confetti effect
+    function createConfetti() {
+      const colors = ['#00d4c4', '#4caf50', '#2196f3', '#ff9800', '#e91e63'];
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = '-10px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+        document.body.appendChild(confetti);
+        
+        // Animate confetti
+        const animation = confetti.animate([
+          { 
+            top: '-10px', 
+            opacity: 1,
+            transform: `rotate(${Math.random() * 360}deg) translateX(0)`
+          },
+          { 
+            top: '100vh', 
+            opacity: 0,
+            transform: `rotate(${Math.random() * 720}deg) translateX(${Math.random() * 200 - 100}px)`
+          }
+        ], {
+          duration: 3000 + Math.random() * 2000,
+          easing: 'cubic-bezier(0.1, 0.8, 0.2, 1)'
+        });
+        
+        animation.onfinish = () => confetti.remove();
+      }
+    }
+
+    // Countdown timer for redirect
+    function startCountdown() {
+      let count = 5;
+      const countdownElement = document.getElementById('countdown');
+      const timer = setInterval(() => {
+        count--;
+        countdownElement.textContent = count;
+        
+        if (count <= 0) {
+          clearInterval(timer);
+          window.location.href = 'index.html';
+        }
+      }, 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Create confetti effect
+      createConfetti();
+      
+      // Start countdown for redirect
+      startCountdown();
+    });
+
+    // Stop redirect if user interacts with page
+    document.addEventListener('click', function() {
+      const timerElement = document.querySelector('.redirect-timer');
+      if (timerElement) {
+        timerElement.innerHTML = '<i class="fas fa-info-circle"></i> Redirect cancelled. You can continue browsing.';
+        timerElement.style.background = '#fff3e0';
+        timerElement.style.borderLeftColor = '#ff9800';
+      }
+    });
+  </script>
+</body>
+</html>
